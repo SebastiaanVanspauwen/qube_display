@@ -1,0 +1,54 @@
+@import url("https://p.typekit.net/p.css?s=1&k=mjl2wjz&ht=tk&f=39347.39348.39349&a=6625007&app=typekit&e=css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+--primary-color:#5CC799;
+}
+
+@layer components {
+    .button-base {
+        @apply rounded-[48px]  ;
+        @apply px-[25px] ;
+        @apply py-[12px];
+    }
+
+    .clipping-path{
+        clip-path: polygon(33% 5%, 70% 7%, 100% 7%, 100% 100%, 0 100%, 0 60%, 0 0);
+    }
+
+    hr.line-1 {
+        @apply border;
+        @apply border-w2p-dark-grey;
+        @apply w-full;
+    }
+
+    hr.line-3 {
+        @apply border;
+        @apply border-w2p-light-grey;
+        @apply w-full;
+    }
+
+    hr.line-4 {
+        @apply border;
+        @apply border-w2p-light-grey;
+        @apply w-full;
+    }
+
+    .card-grid {
+        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6;
+    }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
