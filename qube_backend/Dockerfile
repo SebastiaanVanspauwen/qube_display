@@ -30,4 +30,4 @@ COPY --from=build-stage /app/src /usr/src/app/src
 COPY --from=build-stage /app/templates /usr/src/app/templates
 COPY --from=build-stage /app/_build /usr/src/app/_build
 
-EXPOSE 3000
+EXPOSE 3000 10016 7777 9000
