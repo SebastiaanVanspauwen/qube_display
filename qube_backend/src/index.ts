@@ -15,8 +15,11 @@ export class Runner {
   wss: WebSocketServer
   private readonly logger: Logger = new Logger(LogLevel.INFO)
   private lastPacket: QUBEPacket | undefined
+  private pinger: NodeJS.Timer
 
   private readonly QUBE_PORT_SEND = 10016
+  private readonly QUBE_PORT_RECV = 7777
+  private readonly QUBE_IP = '172.22.222.208'
 
   async start (): Promise<void> {
     this.wss = new WebSocketServer({ port: 9000 })
@@ -36,6 +39,18 @@ export class Runner {
           }
         })
       }
+    }) 
+
+    this.pinger = setInterval(() => {
+      socket.send('ping', this.QUBE_PORT_RECV, this.QUBE_IP)
+    }, 5000)
+    
+    this.wss.on('connection', (ws: WebSocket) => {
+      console.log('Client connected')
+    })
+
+    this.wss.on('message', (message: string) => {
+      console.log('Message from client: ', message)
     })
 
     process.on('SIGINT', () => { void this.close() })
@@ -44,6 +59,7 @@ export class Runner {
 
   async close (): Promise<void> {
     this.server?.close()
+    clearTimeout(this.pinger)
 
     // eslint-disable-next-line no-console
     console.log('server closed')

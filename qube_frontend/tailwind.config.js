@@ -3,6 +3,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
+      'card_background': '#292F45',
       'primary_black': '#091026',
       'primary_darkblue': '#030B2B',
       'primary_blue': '#052DA6',
