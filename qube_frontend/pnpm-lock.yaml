@@ -42,6 +42,8 @@ specifiers:
   sass: ^1.55.0
   socket.io-client: ^4.5.3
   tailwindcss: ^3.0.23
+  three: ^0.145.0
+  troisjs: ^0.3.4
   typescript: ^4.5.4
   unplugin-auto-import: ^0.5.3
   unplugin-vue-components: ^0.17.9
@@ -72,6 +74,8 @@ dependencies:
   primevue: 3.15.0_uhbflyulyacm2ba5u2ity3nxnu
   sass: 1.55.0
   socket.io-client: 4.5.3
+  three: 0.145.0
+  troisjs: 0.3.4
   validator: 13.7.0
   vue: 3.2.23
   vue-3-socket.io: 1.0.5
@@ -13797,6 +13801,10 @@ packages:
     resolution: {integrity: sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=}
     dev: true
 
+  /three/0.145.0:
+    resolution: {integrity: sha512-EKoHQEtEJ4CB6b2BGMBgLZrfwLjXcSUfoI/MiIXUuRpeYsfK5aPWbYhdtIVWOH+x6X0TouldHKHBuc/LAiFzAw==}
+    dev: false
+
   /through2/2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
     dependencies:
@@ -13892,6 +13900,10 @@ packages:
   /trim/0.0.1:
     resolution: {integrity: sha512-YzQV+TZg4AxpKxaTHK3c3D+kRDCGVEE7LemdlQZoQXn0iennk10RsIoY6ikzAqJTc9Xjl9C1/waHom/J86ziAQ==}
     dev: true
+
+  /troisjs/0.3.4:
+    resolution: {integrity: sha512-aonG2lw+QyTjytJpvYIaGv2AiIKzm+eSYT4ByG64uVh+jCLAWxnblS6bCewIckvCMqs2j3z351Q/IFIPWYViCQ==}
+    dev: false
 
   /trough/1.0.5:
     resolution: {integrity: sha512-rvuRbTarPXmMb79SmzEp8aqXNKcK+y0XaB298IXueQ8I2PsrATcPBCSPyK/dDNa2iWOhKlfNnOjdAOTBU/nkFA==}

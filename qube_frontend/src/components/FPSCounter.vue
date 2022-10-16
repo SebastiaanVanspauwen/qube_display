@@ -1,5 +1,5 @@
 <template>
-  <div class="fps-counter">fps: {{ fps }}</div>
+  <div class="fps-counter">{{ fps }}</div>
 </template>
 
 <script>

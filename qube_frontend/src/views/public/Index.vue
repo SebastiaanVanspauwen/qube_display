@@ -43,7 +43,7 @@ const laserState = computed(() => {
 
 const pps = ref(0)
 // Set interval every 1 second to calculate packets per second
-const packetsPerSecondInterval = setInterval(async () => {
+setInterval(async () => {
   const packets = packetStore.getPacketCount()
 
   // Wait for 1 second before calculating packets per second
@@ -55,24 +55,6 @@ const packetsPerSecondInterval = setInterval(async () => {
 const attenuationStrength = computed(() => {
   return ((63 - packet.value!.info.microwaveData.attenuation) / 63) * 100
 })
-
-const lastPing = computed(() => {
-  if (packet === undefined) return
-
-  const now = Date.now() - packet.value!.info.deviceData.connectionStatus.lastPingTick
-
-  return moment.utc(now + packet.value!.info.deviceData.connectionStatus.lastPingTick).format('YYYY:MM:DD HH:mm:ss')
-})
-
-function fromSingleArray (input: number[]): number[][] {
-  const output: number[][] = []
-
-  for (let i = 0; i < input.length; i += 1) {
-    output.push([i, input[i]])
-  }
-
-  return output
-}
 
 let odmrChart: echarts.ECharts
 
@@ -160,26 +142,26 @@ window.onresize = () => {
     <FPSCounter />
   </div>
   <div class="w-[100%] m-auto flex justify-center">
-      <div class="w-[90%] py-8 px-[100px]">
+      <div class="w-[90%] py-8">
         <div class="flex m-auto w-[70%]">
-            <StatisticsCard header="Laser" unit="°C"
+            <StatisticsCard header="Laser housing temperature" unit="°C"
               :value="packet!.info.laserData.temperature.toFixed(2)" 
             >
               <TemperatureIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
             </StatisticsCard>
 
-            <StatisticsCard header="Board" unit="°C"
+            <StatisticsCard header="Board temperature" unit="°C"
               :value="packet!.data.referenceTemp.referenceTemperature.toFixed(2)" 
             >
               <TemperatureIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
             </StatisticsCard>
 
-            <StatisticsCard header="Uptime" unit=""
+            <StatisticsCard header="System uptime" unit=""
               :value="uptime" 
             >
               <UptimeIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
             </StatisticsCard>
-            <StatisticsCard header="Packets received" unit=""
+            <StatisticsCard header="Packets received since connected" unit=""
               :value="packetStore.getPacketCount().toString()" 
             >
               <PacketIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
@@ -191,11 +173,6 @@ window.onresize = () => {
             </StatisticsCard>
         </div>
         <div class="flex m-auto w-[70%]">
-            <StatisticsCard header="Laser Power" unit="%"
-              :value="laserStrength.toFixed(2)" 
-            >
-              <LaserBeamIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
 
             <StatisticsCard header="Laser Status" unit=""
               :value="laserState" 
@@ -209,13 +186,25 @@ window.onresize = () => {
               <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
             </StatisticsCard>
 
+            <StatisticsCard header="Laser Power" unit="%"
+              :value="laserStrength.toFixed(2)" 
+              info="The higher the laser power, the more power is being emitted from the laser, resulting in a higher intensity of led right emitted by the diamond."
+
+            >
+              <LaserBeamIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+            </StatisticsCard>
+
             <StatisticsCard header="Attenuation" unit="%"
               :value="attenuationStrength.toFixed(2)" 
+              info="The larger the attenuation, the less power is transmitted by the microwave system, resulting in a less defined ODMR signal."
+
             >
               <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              
             </StatisticsCard>
-            <StatisticsCard header="Averaging" unit=""
+            <StatisticsCard header="Measurements / packet" unit=""
               :value="packet!.info.deviceData.deviceSettings.averageOptical.toString()" 
+              info="The amount of averages taken for the ODMR sample by the QUBE before sending a packet. The higher this value, the slower the amount of packets but the higher the resolution."
             >
               <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
             </StatisticsCard>

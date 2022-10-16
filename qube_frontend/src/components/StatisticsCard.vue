@@ -26,33 +26,32 @@ defineProps({
 </script>
 
 <template>
-      <div class="w-[90%] m-auto py-5">
+      <div class="w-[90%] m-auto py-5 min-w-[196px] px-5 h-[128px]">
         <div class="text-white font-3xl">
-            <div class="flex justify-between">
+            <div class="m-auto">
                <div class=" py-5 flex">
                   <div class="">
                     <slot />
                   </div>
-                  <div class="text-white text-center px-4">
-                      <h2 class="text-center"> {{ value}} {{ unit }}</h2>
-                      <h1 class="text-center"> {{ header }} </h1>
+                  <div class="text-white text-center m-auto min-w-[50%]">
+                      <h2 class="text-left"> {{ value}} {{ unit }}</h2>
+                      <h1 class="text-left min-w-[50%] "> {{ header }} </h1>
                   </div>
                 </div>
             </div>
-        </div>
-        <div class="text-white text-sm">
-            <p> {{ info }}</p>
+            <div>
+              <p class="text-justify"> {{ info }}</p>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.svg img {
-    fill: #ffffff;
-    stroke: #ffffff; 
+p {
+  font-size: 12px;
 }
 h1 {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color:#ffffff
 }
 h2 {

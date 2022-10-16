@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { usePacketStore } from '@/stores/packet.store'
+import { Box, Camera, LambertMaterial, PointLight, Renderer, Scene } from 'troisjs'
 
 let connection: WebSocket
 
@@ -21,7 +22,6 @@ onMounted(() => {
 
 <template>
   <router-view />
-  <div id="modal-teleport" />
 </template>
 
 <style>
@@ -33,5 +33,6 @@ onMounted(() => {
 html, body {
   background-color: #030B2B;
   height: 100%;
+  min-width: 780px;
 }
 </style>
