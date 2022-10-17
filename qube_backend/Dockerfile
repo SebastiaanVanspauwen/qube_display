@@ -10,24 +10,9 @@ COPY package.json pnpm-lock.yaml tsconfig.json ./
 RUN pnpm install --frozen-lockfile
 
 COPY src ./src
-COPY docs ./docs
-COPY templates ./templates
 
 RUN pnpm build
-RUN pnpm generate:doc
 
-# RUN pnpm prune --prod
+EXPOSE 9000 10016 7777
 
-# production stage
-FROM node:16-alpine as production-stage
-
-WORKDIR /usr/src/app
-
-COPY --from=build-stage /app/package.json /usr/src/app
-COPY --from=build-stage /app/node_modules /usr/src/app/node_modules
-COPY --from=build-stage /app/dist /usr/src/app/dist
-COPY --from=build-stage /app/src /usr/src/app/src
-COPY --from=build-stage /app/templates /usr/src/app/templates
-COPY --from=build-stage /app/_build /usr/src/app/_build
-
-EXPOSE 3000 10016 7777 9000
+CMD ["pnpm", "serve"]

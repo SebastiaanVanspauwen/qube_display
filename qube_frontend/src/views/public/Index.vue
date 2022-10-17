@@ -31,14 +31,15 @@ const uptime = computed(() => {
 })
 
 const laserStrength = computed(() => {
-  return ((280 - packet.value!.info.laserData.potentiometerValue) / 280) * 100
+  return packet.value!.info.laserData.status === 1
+    ? (((280 - packet.value!.info.laserData.potentiometerValue) / 280) * 100).toFixed(2)
+    : '0'
 })
+
 const laserState = computed(() => {
-  if (packet.value!.info.laserData.status == 1) {
-    return 'ON'
-  } else {
-    return 'OFF'
-  }
+  return packet.value!.info.laserData.status === 1
+    ? 'ON'
+    : 'OFF'
 })
 
 const pps = ref(0)
@@ -70,8 +71,11 @@ onMounted(() => {
       name: 'Microwave Frequency (MHz)',
       axisLine: {
         lineStyle: {
-          color: '#ffff'
+          color: '#ffff',
+          width: 2
         },
+      },
+      splitLine: {
         show: false
       },
       axisLabel: {
@@ -96,15 +100,24 @@ onMounted(() => {
       max: (Math.max(...packet.value!.data.measurement.ODMR.map(x => x / 1000)) + 0.015).toFixed(2),
       type: 'value',
       name: 'Voltage (V)',
+      splitLine: {
+        lineStyle: {
+          color: '#ffff',
+          type: 'dashed',
+          dashOffset: 5,
+          width: 0.3
+        }
+      },
       axisLine: {
         lineStyle: {
-          color: '#ffff'
+          color: '#ffff',
+          width: 2
         },
       },
         // bigger font
       axisLabel: {
         fontSize: 16
-      }
+      },
     },
     axisTick: {
         length: 12,
@@ -187,7 +200,7 @@ window.onresize = () => {
             </StatisticsCard>
 
             <StatisticsCard header="Laser Power" unit="%"
-              :value="laserStrength.toFixed(2)" 
+              :value=laserStrength
               info="The higher the laser power, the more power is being emitted from the laser, resulting in a higher intensity of led right emitted by the diamond."
 
             >
@@ -211,7 +224,7 @@ window.onresize = () => {
         </div>
     </div>   
   </div>
-  <div class="w-[90%] m-auto">
+  <div class="w-[90%] m-auto my-12">
     <div id="odmr" class="min-w-[80%] m-auto w-[90%] min-h-[750px]"></div>
   </div>
 </div>

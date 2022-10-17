@@ -22,7 +22,13 @@ export class Runner {
   private readonly QUBE_IP = '172.22.222.208'
 
   async start (): Promise<void> {
-    this.wss = new WebSocketServer({ port: 9000 })
+    try {
+      this.wss = new WebSocketServer({ port: 9000 })
+      this.logger.info('WebSocket server started on port 9000')
+    } catch (e) {
+      this.logger.error('Failed to start WebSocket server')
+      this.logger.error(e)
+    }
 
     const socket = datagram.createSocket('udp4')
     socket.bind(this.QUBE_PORT_SEND)
@@ -35,6 +41,7 @@ export class Runner {
       if (this.lastPacket !== undefined) {
         this.wss.clients.forEach(client => {
           if (client.readyState === WebSocket.OPEN) {
+            this.logger.info('Sending packet to client')
             client.send(JSON.stringify(this.lastPacket))
           }
         })
@@ -46,7 +53,7 @@ export class Runner {
     }, 5000)
     
     this.wss.on('connection', (ws: WebSocket) => {
-      console.log('Client connected')
+      console.log('Client connected from:', ws._socket.remoteAddress, 'on port:', ws._socket.remotePort)
     })
 
     this.wss.on('message', (message: string) => {

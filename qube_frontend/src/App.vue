@@ -11,9 +11,11 @@ onMounted(() => {
 
   connection.onopen = () => {
     console.log("Connected to server");
+    console.log(connection.url);
   }
 
   connection.onmessage = (message: any) => {
+    console.log(message)
     packetStore.setPacket(JSON.parse(message.data))
   }
 })
