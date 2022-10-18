@@ -41,27 +41,27 @@ interface MicrowaveData {
       int: number
       fract: number
       control: number
-    },
+    }
     register1: {
       modulus: number
       control: number
-    },
+    }
     register2: {
-      data: number,
+      data: number
       control: number
-    },
+    }
     register3: {
       data: number
       control: number
-    },
+    }
     register4: {
       enabled: number
       control: number
-    },
+    }
     register5: {
-      data: number,
+      data: number
       control: number
-    },
+    }
   }
   frequencySkips: number
   broadSweepSteps: number

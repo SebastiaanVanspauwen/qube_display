@@ -1,8 +1,7 @@
-import { Server } from 'http'
 import datagram from 'dgram'
+import WebSocket, { WebSocketServer } from 'ws'
 import Logger, { LogLevel } from './helpers/logger'
 import { destructure } from './helpers/destructure'
-import WebSocket, { WebSocketServer } from 'ws'
 import { QUBEPacket } from './types/packet.type'
 
 export class Runner {
@@ -10,19 +9,18 @@ export class Runner {
   private readonly logger: Logger = new Logger(LogLevel.INFO)
   private lastPacket: QUBEPacket | undefined
   private pinger: NodeJS.Timer
-  private pingReply: boolean = true
+  private pingReply = true
 
   private readonly QUBE_PORT_RECV = 10016
   private readonly QUBE_PORT_SEND = 7777
   private readonly QUBE_IP = '172.22.222.208'
 
-  private socket: datagram.Socket = datagram.createSocket('udp4') 
+  private readonly socket: datagram.Socket = datagram.createSocket('udp4')
 
   async start (): Promise<void> {
-
     this.initHandlers()
     await this.initPing()
-    
+
     this.wss.on('connection', (ws: WebSocket) => {
       this.logger.info('Client connected from:', ws)
     })
@@ -35,10 +33,9 @@ export class Runner {
     process.on('SIGTERM', () => { void this.close() })
   }
 
-  private initHandlers(): void {
-
+  private initHandlers (): void {
     this.logger.info('Connecting to QUBE')
-  
+
     this.socket.bind(this.QUBE_PORT_RECV)
     this.socket.connect(this.QUBE_PORT_SEND, this.QUBE_IP)
 
@@ -46,48 +43,46 @@ export class Runner {
       this.logger.error('Error: ', err)
     })
 
-    this.socket.on('message', (raw: Buffer, rInfo: datagram.RemoteInfo) => { 
-
+    this.socket.on('message', (raw: Buffer, rInfo: datagram.RemoteInfo) => {
       switch (rInfo.size) {
+      case 14:
+        this.logger.info(`Reply QUBE at ${this.socket.address().address}:${this.socket.address().port}`)
+        this.pingReply = true
+        break
 
-        case 14:
-          this.logger.info('Reply QUBE at', this.socket.address().address + ':' + this.socket.address().port)
-          this.pingReply = true
-          break
+      case 512:
+        this.lastPacket = destructure(raw)
 
-        case 512:
-          this.lastPacket = destructure(raw)
+        if (this.lastPacket !== undefined) {
+          this.wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+              this.logger.info('Sending packet to client')
+              client.send(JSON.stringify(this.lastPacket))
+            }
+          })
+        }
+        break
 
-          if (this.lastPacket !== undefined) {
-            this.wss.clients.forEach(client => {
-              if (client.readyState === WebSocket.OPEN) {
-                this.logger.info('Sending packet to client')
-                client.send(JSON.stringify(this.lastPacket))
-              }
-            })
-          }
-          break
-
-        default:
-          throw Error('Unknown packet size')
+      default:
+        throw Error('Unknown packet size')
       }
     })
   }
 
-  async initPing(): Promise<void> {
+  async initPing (): Promise<void> {
     this.pinger = setInterval(() => {
-      this.logger.info('Pinged QUBE at', this.QUBE_IP + ':' + this.QUBE_PORT_SEND)
+      this.logger.info(`Pinged QUBE at ${this.QUBE_IP}:${this.QUBE_PORT_SEND}`)
 
       if (this.pingReply) {
         this.socket.send('ping', this.QUBE_PORT_SEND, this.QUBE_IP)
         this.pingReply = false
       } else {
-        this.handlePingTimeout()
+        void this.handlePingTimeout()
       }
     }, 2000)
   }
 
-  async handlePingTimeout(): Promise<void> {
+  async handlePingTimeout (): Promise<void> {
     await this.close()
     await new Runner().start()
   }

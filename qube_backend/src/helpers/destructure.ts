@@ -2,7 +2,7 @@ import { QUBEPacket, RawPacket } from '../types/packet.type'
 
 function toReadableTemperature (raw: number): number {
   const sqrtSum = Math.pow(-10.888, 2) + (4 * 0.00347) * (1777.3 - raw)
-  const numerator = 10.888 - (Math.sqrt(Math.pow(-10.888, 2) + (4 * 0.00347) * (1777.3 - raw)))
+  const numerator = 10.888 - (Math.sqrt(sqrtSum))
   const denominator = -0.00347 * 2
   const transformed = (numerator / denominator) + 30
   return transformed
@@ -62,7 +62,7 @@ export function destructure (payload: RawPacket): QUBEPacket | undefined {
           register0: {
             int: payload.readInt16LE(453) >> 3,
             fract: payload.readUInt32LE(453) & 0xFC,
-            control: payload.readInt16LE(451) & 0x03,
+            control: payload.readInt16LE(451) & 0x03
           },
           register1: {
             modulus: (payload.readUInt16LE(457) & 0xFB) >> 3,
@@ -78,7 +78,7 @@ export function destructure (payload: RawPacket): QUBEPacket | undefined {
           },
           register4: {
             enabled: payload.readUInt32LE(469) >> 5,
-            control: payload.readUInt16LE(467) & 0x03,
+            control: payload.readUInt16LE(467) & 0x03
           },
           register5: {
             data: payload.readUInt32LE(472),
@@ -97,7 +97,7 @@ export function destructure (payload: RawPacket): QUBEPacket | undefined {
         },
         connectionStatus: {
           lastPingTick: payload.readUInt32LE(484),
-          hasConnection: payload.readUInt8(488),
+          hasConnection: payload.readUInt8(488)
         },
         deviceSettings: {
           averageOptical: payload.readUInt16LE(490),
