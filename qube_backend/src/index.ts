@@ -17,7 +17,7 @@ export class Runner {
 
   private readonly socket: datagram.Socket = datagram.createSocket('udp4')
 
-  async start (): Promise<void> {
+  private async start (): Promise<void> {
     this.initHandlers()
     await this.initPing()
 
@@ -61,7 +61,7 @@ export class Runner {
     })
   }
 
-  async initPing (): Promise<void> {
+  private async initPing (): Promise<void> {
     this.pinger = setInterval(() => {
       this.logger.info(`Pinged QUBE at ${this.QUBE_IP}:${this.QUBE_PORT_SEND}`)
 
@@ -86,12 +86,12 @@ export class Runner {
     }, 2000)
   }
 
-  async handlePingTimeout (): Promise<void> {
+  private async handlePingTimeout (): Promise<void> {
     await this.close()
     await new Runner().start()
   }
 
-  async close (): Promise<void> {
+  private async close (): Promise<void> {
     this.wss?.close()
     this.socket.close()
     clearTimeout(this.pinger)
