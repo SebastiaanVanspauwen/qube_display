@@ -5,7 +5,7 @@ import { destructure } from './helpers/destructure'
 import { QUBEPacket } from './types/packet.type'
 
 export class Runner {
-  wss: WebSocketServer = new WebSocketServer({ port: 9000 })
+  private wss: WebSocketServer
   private readonly logger: Logger = new Logger(LogLevel.INFO)
   private lastPacket: QUBEPacket | undefined
   private pinger: NodeJS.Timer
@@ -20,14 +20,6 @@ export class Runner {
   async start (): Promise<void> {
     this.initHandlers()
     await this.initPing()
-
-    this.wss.on('connection', (ws: WebSocket) => {
-      this.logger.info('Client connected from:', ws)
-    })
-
-    this.wss.on('message', (message: string) => {
-      this.logger.info('Message from client: ', message)
-    })
 
     process.on('SIGINT', () => { void this.close() })
     process.on('SIGTERM', () => { void this.close() })
@@ -53,7 +45,7 @@ export class Runner {
       case 512:
         this.lastPacket = destructure(raw)
 
-        if (this.lastPacket !== undefined) {
+        if (this.lastPacket !== undefined && this.wss !== undefined) {
           this.wss.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
               this.logger.info('Sending packet to client')
@@ -74,6 +66,18 @@ export class Runner {
       this.logger.info(`Pinged QUBE at ${this.QUBE_IP}:${this.QUBE_PORT_SEND}`)
 
       if (this.pingReply) {
+        if (this.wss === undefined) {
+          this.wss = new WebSocketServer({ port: 9000 })
+
+          this.wss.on('connection', (ws: WebSocket) => {
+            this.logger.info('Client connected from:', ws)
+          })
+
+          this.wss.on('message', (message: string) => {
+            this.logger.info('Message from client: ', message)
+          })
+        }
+
         this.socket.send('ping', this.QUBE_PORT_SEND, this.QUBE_IP)
         this.pingReply = false
       } else {
