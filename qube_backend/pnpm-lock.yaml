@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/node': ^18.11.0
+  '@types/ws': ^8.5.3
   '@typescript-eslint/eslint-plugin': ^5.17.0
   '@typescript-eslint/parser': ^5.17.0
   dotenv: ^16.0.0
@@ -24,6 +25,7 @@ dependencies:
 
 devDependencies:
   '@types/node': 18.11.0
+  '@types/ws': 8.5.3
   '@typescript-eslint/eslint-plugin': 5.17.0_ncp7kzlvh3hxymziyb722bt56u
   '@typescript-eslint/parser': 5.17.0_thk3xo4exzjr5rl6cnexo7v6re
   dotenv: 16.0.0
@@ -1656,6 +1658,12 @@ packages:
 
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
+    dev: true
+
+  /@types/ws/8.5.3:
+    resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
+    dependencies:
+      '@types/node': 18.11.0
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.17.0_ncp7kzlvh3hxymziyb722bt56u:
