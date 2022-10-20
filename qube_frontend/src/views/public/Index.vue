@@ -1,34 +1,12 @@
 <script setup lang="ts">
+import { useConnectionStore } from '@/stores/connection.store';
 import { usePacketStore } from '@/stores/packet.store'
 import { QUBEPacket } from '@/types/packet.type';
 import * as echarts from 'echarts'
 import moment from 'moment'
 
 const packetStore = usePacketStore()
-
-const packet = computed(() => packetStore.getPacket())
-
-const microwaveRange = computed(() => {
-  if (packet === undefined) return
-
-  const step = packet.value!.info.microwaveData.steps
-  const min = packet.value!.info.microwaveData.minimumFrequency
-  const max = packet.value!.info.microwaveData.maximumFrequency
-
-  return Array.from({ length: step + 1 }, (_, i ) => min + (max - min) / step * i)
-})
-
-function to2DArray (packet: QUBEPacket): Number[][] {
-  const odmr = packet.data.measurement.ODMR.map(x => x / 1000)
-
-  return Array.from({ length: packet.info.microwaveData.steps }, (_, i) => [microwaveRange.value![i], odmr[i]])
-}
-
-const uptime = computed(() => {
-  if (packet === undefined) return
-
-  return moment.utc(packet.value!.info.deviceData.system.systemTickCount).format('HH:mm:ss')
-})
+const connectionStore = useConnectionStore()
 
 const laserStrength = computed(() => {
   return packet.value!.info.laserData.status === 1
@@ -57,94 +35,6 @@ const attenuationStrength = computed(() => {
   return ((63 - packet.value!.info.microwaveData.attenuation) / 63) * 100
 })
 
-let odmrChart: echarts.ECharts
-
-onMounted(() => {
-  odmrChart = echarts.init(document.getElementById('odmr') as HTMLDivElement)
-  setInterval(() => {
-    odmrChart.setOption({
-    xAxis: {
-      type: 'value',
-      min: Math.round(microwaveRange.value![0] / 100) * 100,
-      max: Math.round(microwaveRange.value![microwaveRange.value!.length - 1] / 100) * 100,
-      data: microwaveRange,
-      name: 'Microwave Frequency (MHz)',
-      axisLine: {
-        lineStyle: {
-          color: '#ffff',
-          width: 2
-        },
-      },
-      splitLine: {
-        show: false
-      },
-      axisLabel: {
-        fontSize: 16
-      },
-      nameLocation: 'middle',
-      nameGap: 0,
-      splitArea: {
-        show: false
-      },
-      nameTextStyle: {
-        /**
-         * the top padding will shift the name down so that it does not overlap with the axis-labels
-         * t-l-b-r
-         */
-        padding: [50, 0, 0, 0],
-        fontSize: 16
-      }
-    },
-    yAxis: {
-      min: (Math.min(...packet.value!.data.measurement.ODMR.map(x => x / 1000)) - 0.015).toFixed(2),
-      max: (Math.max(...packet.value!.data.measurement.ODMR.map(x => x / 1000)) + 0.015).toFixed(2),
-      type: 'value',
-      name: 'Voltage (V)',
-      splitLine: {
-        lineStyle: {
-          color: '#ffff',
-          type: 'dashed',
-          dashOffset: 5,
-          width: 0.3
-        }
-      },
-      axisLine: {
-        lineStyle: {
-          color: '#ffff',
-          width: 2
-        },
-      },
-        // bigger font
-      axisLabel: {
-        fontSize: 16
-      },
-    },
-    axisTick: {
-        length: 12,
-        lineStyle: {
-          color: '#fff',
-          width: 2
-        }
-      },
-    series: [{
-      data: to2DArray(packet.value!),
-      type: 'line',
-      showSymbol: false,
-      smooth: true,
-      lineStyle: {
-        color: '#025BF9',
-        width: 5
-      },
-    }
-  ]
-  })
-  }, 20)
-})
-
-window.onresize = () => {
-  odmrChart.resize()
-}
-
 </script>
 
 <template>
@@ -154,78 +44,82 @@ window.onresize = () => {
     <h1 class="flex m-auto text-center py-10 text-white font-bold text-5xl"> OSCAR-QUBE Display </h1>
     <FPSCounter />
   </div>
-  <div class="w-[100%] m-auto flex justify-center">
-      <div class="w-[90%] py-8">
-        <div class="flex m-auto w-[70%]">
-            <StatisticsCard header="Laser housing temperature" unit="°C"
-              :value="packet!.info.laserData.temperature.toFixed(2)" 
-            >
-              <TemperatureIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
+  <div v-if="connectionStore.hasConnection()" class="flex flex-col items-center">
+    <div class="w-[100%] m-auto flex justify-center">
+        <div class="w-[90%] py-8">
+          <div class="flex m-auto w-[70%]">
+              <StatisticsCard header="Laser housing temperature" unit="°C"
+                :value="packet!.info.laserData.temperature.toFixed(2)" 
+              >
+                <TemperatureIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
 
-            <StatisticsCard header="Board temperature" unit="°C"
-              :value="packet!.data.referenceTemp.referenceTemperature.toFixed(2)" 
-            >
-              <TemperatureIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
+              <StatisticsCard header="Board temperature" unit="°C"
+                :value="packet!.data.referenceTemp.referenceTemperature.toFixed(2)" 
+              >
+                <TemperatureIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
 
-            <StatisticsCard header="System uptime" unit=""
-              :value="uptime" 
-            >
-              <UptimeIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
-            <StatisticsCard header="Packets received since connected" unit=""
-              :value="packetStore.getPacketCount().toString()" 
-            >
-              <PacketIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
-            <StatisticsCard header="Packets per second" unit=""
-              :value="pps.toString()" 
-            >
-              <PacketIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
-        </div>
-        <div class="flex m-auto w-[70%]">
+              <StatisticsCard header="System uptime" unit=""
+                :value="uptime" 
+              >
+                <UptimeIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
+              <StatisticsCard header="Packets received since connected" unit=""
+                :value="packetStore.getPacketCount().toString()" 
+              >
+                <PacketIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
+              <StatisticsCard header="Packets per second" unit=""
+                :value="pps.toString()" 
+              >
+                <PacketIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
+          </div>
+          <div class="flex m-auto w-[70%]">
 
-            <StatisticsCard header="Laser Status" unit=""
-              :value="laserState" 
-            >
-              <LaserBeamIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
+              <StatisticsCard header="Laser Status" unit=""
+                :value="laserState" 
+              >
+                <LaserBeamIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
 
-            <StatisticsCard header="Microwave Status" unit=""
-              :value="laserState" 
-            >
-              <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
+              <StatisticsCard header="Microwave Status" unit=""
+                :value="laserState" 
+              >
+                <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
 
-            <StatisticsCard header="Laser Power" unit="%"
-              :value=laserStrength
-              info="The higher the laser power, the more power is being emitted from the laser, resulting in a higher intensity of led right emitted by the diamond."
+              <StatisticsCard header="Laser Power" unit="%"
+                :value=laserStrength
+                info="The higher the laser power, the more power is being emitted from the laser, resulting in a higher intensity of led right emitted by the diamond."
 
-            >
-              <LaserBeamIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
+              >
+                <LaserBeamIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
 
-            <StatisticsCard header="Attenuation" unit="%"
-              :value="attenuationStrength.toFixed(2)" 
-              info="The larger the attenuation, the less power is transmitted by the microwave system, resulting in a less defined ODMR signal."
+              <StatisticsCard header="Attenuation" unit="%"
+                :value="attenuationStrength.toFixed(2)" 
+                info="The larger the attenuation, the less power is transmitted by the microwave system, resulting in a less defined ODMR signal."
 
-            >
-              <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-              
-            </StatisticsCard>
-            <StatisticsCard header="Measurements / packet" unit=""
-              :value="packet!.info.deviceData.deviceSettings.averageOptical.toString()" 
-              info="The amount of averages taken for the ODMR sample by the QUBE before sending a packet. The higher this value, the slower the amount of packets but the higher the resolution."
-            >
-              <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
-            </StatisticsCard>
-        </div>
-    </div>   
+              >
+                <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+                
+              </StatisticsCard>
+              <StatisticsCard header="Measurements / packet" unit=""
+                :value="packet!.info.deviceData.deviceSettings.averageOptical.toString()" 
+                info="The amount of averages taken for the ODMR sample by the QUBE before sending a packet. The higher this value, the slower the amount of packets but the higher the resolution."
+              >
+                <MicrowaveIcon background="#0B132F" fill="#0654EF" height="48px" width="48px" circlewidth="64px" circleheight="64px"/>
+              </StatisticsCard>
+          </div>
+      </div>   
+    </div>
+    <div class="w-[90%] m-auto my-12">
+    </div>
   </div>
-  <div class="w-[90%] m-auto my-12">
-    <div id="odmr" class="min-w-[80%] m-auto w-[90%] min-h-[750px]"></div>
+  <div v-else>
+    <p> No connection omg help !!!</p>
   </div>
 </div>
   <BottomFooter />
