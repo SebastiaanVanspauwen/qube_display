@@ -10,35 +10,32 @@ export const usePacketStore = defineStore({
     packetsReceived: 0,
     startedAt: Date.now(),
     temperature: {
-      referenceTemperature: [] as number[],
-      laserTemperature: [] as number[],
-    },
-    maxArrayLength: 25
+      referenceTemperature: {} as number,
+      laserTemperature: {} as number,
+    }
   }),
   actions: {
-    getMaxArrayLength() {
-      return this.maxArrayLength
-    },
-    getPacket (): QUBEPacket | undefined {
+    get _packet(): QUBEPacket {
+      console.log('get packet')
       return this.packet
     },
-    setPacket(packet: QUBEPacket): void {
+    setPacket(packet: QUBEPacket) {
       this.packet = packet
       this.packetsReceived++
     },
     timeout(ms: number) {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
-    getPacketCount(): number {
-      return this.packetsReceived
+    get packetCount(): string {
+      return this.packetsReceived.toString()
     },
-    getReferenceTemperature (): number[] {
-      return this.temperature.referenceTemperature
+    get refTemp (): string {
+      return this.temperature.referenceTemperature.toFixed(2)
     },
-    getLaserTemperature (): number[] {
-      return this.temperature.laserTemperature
+    get laserTemp (): string {
+      return this.temperature.laserTemperature.toFixed(2)
     },
-    getMicrowaveRange (): number[][] {
+    get microwaveRange (): number[][] {
       const step = this.packet.info.microwaveData.steps
       const min = this.packet.info.microwaveData.minimumFrequency
       const max = this.packet.info.microwaveData.maximumFrequency
@@ -47,18 +44,21 @@ export const usePacketStore = defineStore({
 
       return Array.from({ length: this.packet.info.microwaveData.steps }, (_, i) => [microwaveRange[i], this.packet.data.measurement.ODMR[i]])
     },
-    getUptime (): string {
+    get uptime (): string {
       return moment.utc(this.packet.info.deviceData.system.systemTickCount).format('HH:mm:ss')
     },
-    getLaserStrengh (): string {
+    get laserStrength (): string {
       return this.packet.info.laserData.status === 1
         ? (((280 - this.packet.info.laserData.potentiometerValue) / 280) * 100).toFixed(2)
         : '0'
     },
-    getLaserState (): string {
+    get laserState (): string {
       return this.packet.info.laserData.status === 1
       ? 'ON'
       : 'OFF'
+    },
+    get attenuationStrength (): string {
+      return (((63 - this.packet.info.microwaveData.attenuation) / 63) * 100).toFixed(2)
     }
   }
 })

@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { SocketStore } from './connection.type'
 import { usePacketStore } from './packet.store'
 
+const packetStore = usePacketStore()
+
 export const useConnectionStore = defineStore({
   id: 'wss',
   state: (): SocketStore => ({
@@ -24,7 +26,7 @@ export const useConnectionStore = defineStore({
     },
     WSS_ONMESSAGE(event: MessageEvent) {
         const packet = JSON.parse(event.data)
-        usePacketStore().setPacket(packet)
+        packetStore.setPacket(packet)
     },
     hasConnection(): boolean {
         return this.isConnected

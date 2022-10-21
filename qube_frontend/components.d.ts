@@ -10,6 +10,7 @@ declare module 'vue' {
     CompanyLogo: typeof import('./src/components/icons/CompanyLogo.vue')['default']
     ConnectionStatus: typeof import('./src/components/ConnectionStatus.vue')['default']
     FPSCounter: typeof import('./src/components/FPSCounter.vue')['default']
+    Header: typeof import('./src/components/header/Header.vue')['default']
     LaserBeamIcon: typeof import('./src/components/icons/LaserBeamIcon.vue')['default']
     MicrowaveIcon: typeof import('./src/components/icons/MicrowaveIcon.vue')['default']
     PacketIcon: typeof import('./src/components/icons/PacketIcon.vue')['default']
