@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import { SocketStore } from './connection.type'
 import { usePacketStore } from './packet.store'
 
-const packetStore = usePacketStore()
-
 export const useConnectionStore = defineStore({
   id: 'wss',
   state: (): SocketStore => ({
@@ -26,6 +24,7 @@ export const useConnectionStore = defineStore({
     },
     WSS_ONMESSAGE(event: MessageEvent) {
         const packet = JSON.parse(event.data)
+        const packetStore = usePacketStore()
         packetStore.setPacket(packet)
     },
     hasConnection(): boolean {
@@ -33,7 +32,6 @@ export const useConnectionStore = defineStore({
     },
     async heartbeat () {
         this.heartBeat = setInterval(() => {
-            console.log(this.isConnected, this.wss)
             if (this.isConnected === false && this.wss === undefined) {
                 try {
                     this.wss = new WebSocket('ws://172.22.222.220:9000')

@@ -2,9 +2,10 @@ html, body {
     height: 100%;
   }
   
-  
-* {
-    font: rem/1.175 "BlinkMacSystemFont", -apple-system, "Jua", sans-seri;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-}
+  @font-face { 
+    font-family: "Space Heavy";
+    src: local("Space"), url("@/assets/fonts/A-SPACEHEAVY.otf"), 
+    format("opentype");
+    font-weight: bold;
+  } 
   
