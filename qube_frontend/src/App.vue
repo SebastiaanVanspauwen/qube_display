@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { usePacketStore } from '@/stores/packet.store'
+import type { Engine } from 'tsparticles-engine'
+import { loadFull } from 'tsparticles'
 import { useConnectionStore } from '@/stores/connection.store'
 
-
-const packetStore = usePacketStore()
 const connectionStore = useConnectionStore()
 
-import type { Engine } from "tsparticles-engine"
-import { loadFull } from "tsparticles"
+onMounted(() => {
+  connectionStore.heartbeat()
+})
 
 const options = {
   background: {
     color: {
-      value: "white",
-    },
+      value: 'white'
+    }
   },
-  fpsLimit: 120,
+  fpsLimit: 30,
   interactivity: {
     modes: {
       bubble: {
@@ -23,72 +23,71 @@ const options = {
         duration: 0.2,
         opacity: 0.8,
         size: 40,
-        speed: 0.2,
+        speed: 0.2
       },
       push: {
-        quantity: 4,
+        quantity: 4
       },
       repulse: {
         distance: 200,
-        duration: 0.4,
-      },
-    },
+        duration: 0.4
+      }
+    }
   },
   particles: {
     color: {
-      value: "#0e47a1",
+      value: '#0e47a1'
     },
     links: {
-      color: "#0e47a1",
+      color: '#0e47a1',
       distance: 150,
       enable: true,
       opacity: 0.5,
-      width: 1,
+      width: 1
     },
     collisions: {
-      enable: false,
+      enable: false
     },
     move: {
-      direction: "none",
+      direction: 'none',
       enable: true,
-      outMode: "bounce",
+      outMode: 'bounce',
       random: false,
       speed: 1,
-      straight: false,
+      straight: false
     },
     number: {
       density: {
         enable: true,
-        value_area: 800,
+        value_area: 800
       },
-      value: 80,
+      value: 80
     },
     opacity: {
-      value: 0.2,
+      value: 1
     },
     shape: {
-      type: "circle",
+      type: 'circle'
     },
     size: {
       random: true,
-      value: 5,
-    },
+      value: 3
+    }
   },
-  detectRetina: true,
-};
+  detectRetina: true
+}
 const particlesInit = async (engine: Engine) => {
-  await loadFull(engine);
-};
-
+  await loadFull(engine)
+}
 </script>
 
 <template>
-  <router-view class="z-50 relative"/>
+  <RouterView class="relative z-50" />
   <Particles
-      id="tsparticles"
-      :options="options"
-      :particlesInit="particlesInit"
-    />
+    id="tsparticles"
+    :options="options"
+    :particles-init="particlesInit"
+  />
 </template>
 
 <style>
@@ -103,9 +102,5 @@ html, body {
   background-color: #030B2B;
   height: 100%;
   min-width: 780px;
-}
-
-h1, h2, p {
-  font-family: space, sans-serif;
 }
 </style>

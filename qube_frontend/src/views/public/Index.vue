@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import { useConnectionStore } from '@/stores/connection.store';
+import MainLayout from '../layouts/MainLayout.vue'
+import { useConnectionStore } from '@/stores/connection.store'
 import { usePacketStore } from '@/stores/packet.store'
-import { QUBEPacket } from '@/types/packet.type';
-import * as echarts from 'echarts'
-import moment from 'moment'
-import MainLayout from '../layouts/MainLayout.vue';
 
-// const packetStore = usePacketStore()
-// const packet = packetStore.packet
 const connectionStore = useConnectionStore()
+const packetStore = usePacketStore()
 
+onMounted(() => {
+  packetStore.calculatePPS()
+})
 </script>
 
 <template>
-    <MainLayout>
-      <div class="text-white m-auto">
-        <div v-if="!connectionStore.isConnected">
-          <div class="m-auto">
-            <OscarVideo />
-          </div>
-        </div>
-        <div v-else>
-          <p> Disconnected</p>
+  <MainLayout>
+    <div class="m-auto text-white">
+      <div
+        v-if="connectionStore.isConnected"
+        class="absolute flex h-[100%] items-center justify-center w-[100%]"
+      >
+        <QubeDisplay />
+      </div>
+      <div v-else>
+        <div class="flex m-auto">
+          <QubeVideo />
         </div>
       </div>
-    </MainLayout>
+    </div>
+  </MainLayout>
 </template>
 
 <style scoped>
