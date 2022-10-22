@@ -56,7 +56,7 @@ export class Runner {
         break
 
       default:
-        throw Error('Unknown packet size')
+        break
       }
     })
   }
@@ -81,8 +81,6 @@ export class Runner {
             this.logger.error('Error: ', err)
           })
 
-          // send 1012 to clients
-
           this.wss.on('close', () => {
             this.logger.info('Client disconnected')
             this.wss.clients.forEach(client => {
@@ -97,7 +95,7 @@ export class Runner {
       } else {
         void this.handlePingTimeout()
       }
-    }, 2000)
+    }, 500)
   }
 
   private async handlePingTimeout (): Promise<void> {

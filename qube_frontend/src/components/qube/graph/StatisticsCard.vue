@@ -12,7 +12,7 @@ defineProps({
   },
   unit: {
     type: String,
-    required: true,
+    required: false,
     default: ''
   },
   info: {
@@ -24,28 +24,26 @@ defineProps({
 </script>
 
 <template>
-  <div class="bg-red h-[128px] m-auto min-w-[196px] px-5 py-5 w-[90%]">
-    <div class="font-3xl text-white">
-      <div class="m-auto">
-        <div class="flex py-5">
-          <div class="">
-            <slot />
-          </div>
-          <div class="m-auto min-w-[50%] text-center text-white">
-            <h2 class="text-left">
-              {{ value }} {{ unit }}
-            </h2>
-            <h1 class="min-w-[50%] text-left">
-              {{ header }}
-            </h1>
-          </div>
-        </div>
+  <div class="m-auto min-w-[196px] text-center">
+    <div class="flex flex-row py-5">
+      <div class="">
+        <slot />
       </div>
-      <div>
-        <p class="text-justify">
-          {{ info }}
-        </p>
+      <div class="bg-primary_darkblue opacity-80 px-2 text-center text-white">
+        <h2 class="text-left">
+          <p> {{ value }} {{ unit }} </p>
+        </h2>
+        <h1 class="text-left">
+          {{ header }}
+        </h1>
       </div>
+    </div>
+
+    <!-- Info Card -->
+    <div>
+      <p class="text-justify">
+        {{ info }}
+      </p>
     </div>
   </div>
 </template>

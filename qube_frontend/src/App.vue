@@ -91,16 +91,18 @@ const particlesInit = async (engine: Engine) => {
 </template>
 
 <style>
+@import "@/assets/tailwind.css";
+
 @font-face {
     font-family: space;
     src: url('@/fonts/spaceheavy.otf');
     font-weight: bold;
 }
-@import "@/assets/tailwind.css";
 
 html, body {
   background-color: #030B2B;
   height: 100%;
   min-width: 780px;
+  overflow-y: hidden;
 }
 </style>

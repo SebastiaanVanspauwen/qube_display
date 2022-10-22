@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": ["google.maps"],
+    "types": ["node"],
+    
     "paths": {
       "@/*": [
         "src/*"

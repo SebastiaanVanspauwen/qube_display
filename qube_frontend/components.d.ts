@@ -16,6 +16,7 @@ declare module 'vue' {
     MicrowaveIcon: typeof import('./src/components/icons/MicrowaveIcon.vue')['default']
     PacketIcon: typeof import('./src/components/icons/PacketIcon.vue')['default']
     QubeDisplay: typeof import('./src/components/qube/graph/QubeDisplay.vue')['default']
+    QubeGraph: typeof import('./src/components/qube/graph/QubeGraph.vue')['default']
     QubeVideo: typeof import('./src/components/qube/QubeVideo.vue')['default']
     SocialIcon: typeof import('./src/components/footer/SocialIcon.vue')['default']
     StatisticsCard: typeof import('./src/components/qube/graph/StatisticsCard.vue')['default']
