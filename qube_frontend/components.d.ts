@@ -19,6 +19,7 @@ declare module 'vue' {
     QubeGraph: typeof import('./src/components/qube/graph/QubeGraph.vue')['default']
     QubeVideo: typeof import('./src/components/qube/QubeVideo.vue')['default']
     SocialIcon: typeof import('./src/components/footer/SocialIcon.vue')['default']
+    SpeedIcon: typeof import('./src/components/icons/SpeedIcon.vue')['default']
     StatisticsCard: typeof import('./src/components/qube/graph/StatisticsCard.vue')['default']
     TemperatureIcon: typeof import('./src/components/icons/TemperatureIcon.vue')['default']
     UptimeIcon: typeof import('./src/components/icons/UptimeIcon.vue')['default']

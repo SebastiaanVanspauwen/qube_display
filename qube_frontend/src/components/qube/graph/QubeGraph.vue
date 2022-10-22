@@ -14,6 +14,7 @@ onMounted(() => {
         max: packetStore.getMaximumMicrowave,
         data: packetStore.getMicrowaveRange,
         name: 'Microwave Frequency (MHz)',
+        offset: 25,
         axisLine: {
           lineStyle: {
             color: '#ffff',
@@ -24,7 +25,10 @@ onMounted(() => {
           show: false
         },
         axisLabel: {
-          fontSize: 16
+          fontSize: 16,
+          formatter: function (value: number) {
+            return value.toString().replace(',', '')
+          }
         },
         nameLocation: 'middle',
         nameGap: 0,
@@ -43,6 +47,21 @@ onMounted(() => {
       yAxis: {
         type: 'value',
         name: 'Voltage (V)',
+        offset: 25,
+        minInterval: 1,
+        // fontsize of axis title
+        nameTextStyle: {
+          fontSize: 16
+        },
+        // amount of ticks on the
+        minorTick: {
+          show: true,
+          splitNumber: 5
+        },
+        majorTick: {
+          show: true,
+          splitNumber: 1
+        },
         min: packetStore.getMinimumODMR,
         max: packetStore.getMaximumODMR,
         splitLine: {
@@ -51,7 +70,8 @@ onMounted(() => {
             type: 'dashed',
             dashOffset: 5,
             width: 0.3
-          }
+          },
+          show: false
         },
         axisLine: {
           lineStyle: {
@@ -61,7 +81,10 @@ onMounted(() => {
         },
         // bigger font
         axisLabel: {
-          fontSize: 16
+          fontSize: 16,
+          formatter: function (value: number) {
+            return value.toFixed(2)
+          }
         }
       },
       axisTick: {
@@ -99,6 +122,3 @@ window.onresize = (): void => {
     />
   </div>
 </template>
-
-<style scoped>
-</style>

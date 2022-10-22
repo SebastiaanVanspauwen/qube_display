@@ -21,33 +21,33 @@ const connectionStore = useConnectionStore()
             unit="°C"
             :value="packetStore.getLaserTemp"
           >
-            <LaserBeamIcon />
+            <TemperatureIcon />
           </StatisticsCard>
           <StatisticsCard
             header="Board Temp"
             unit="°C"
             :value="packetStore.getRefTemp"
           >
-            <LaserBeamIcon />
+            <TemperatureIcon />
           </StatisticsCard>
           <StatisticsCard
             header="System Uptime"
             :value="packetStore.getUptime"
           >
-            <LaserBeamIcon />
+            <UptimeIcon />
           </StatisticsCard>
           <StatisticsCard
-            header="Packets since connected"
+            header="Packets received"
             :value="packetStore.getPacketCount"
           >
-            <LaserBeamIcon />
+            <PacketIcon />
           </StatisticsCard>
           <StatisticsCard
             header="Packets per second"
             unit="/s"
             :value="packetStore.getPPS.toString()"
           >
-            <LaserBeamIcon />
+            <SpeedIcon />
           </StatisticsCard>
         </div>
 
@@ -55,14 +55,14 @@ const connectionStore = useConnectionStore()
         <div class="flex m-auto">
           <StatisticsCard
             header="Laser Status"
-            unit="%"
+            unit=""
             :value="packetStore.getLaserState"
           >
             <LaserBeamIcon />
           </StatisticsCard>
           <StatisticsCard
             header="Microwave State"
-            unit="%"
+            unit=""
             :value="packetStore.getLaserState"
           >
             <LaserBeamIcon />

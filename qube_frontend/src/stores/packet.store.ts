@@ -84,16 +84,16 @@ export const usePacketStore = defineStore({
       return this.packet?.info?.deviceData?.deviceSettings?.averageOptical.toString() ?? '10'
     },
     getMinimumMicrowave (): number {
-      return Math.round((this.packet?.info?.microwaveData?.minimumFrequency / 100) * 100)
+      return Math.round((this.packet?.info?.microwaveData?.minimumFrequency * 100) / 100)
     },
     getMaximumMicrowave (): number {
-      return Math.round((this.packet?.info?.microwaveData?.maximumFrequency / 100) * 100)
+      return Math.round((this.packet?.info?.microwaveData?.maximumFrequency * 100) / 100)
     },
     getMinimumODMR (): number {
-      return (Math.round(Math.min(...this.packet?.data?.measurement?.ODMR) / 10) * 10) - 10
+      return parseFloat(Math.min(...this.packet?.data?.measurement?.ODMR).toFixed(2)) - 0.01
     },
     getMaximumODMR (): number {
-      return (Math.round(Math.max(...this.packet?.data?.measurement?.ODMR) / 10) * 10 + 10)
+      return parseFloat(Math.max(...this.packet?.data?.measurement?.ODMR).toFixed(2)) + 0.01
     }
   }
 })

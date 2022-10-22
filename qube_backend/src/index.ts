@@ -95,7 +95,7 @@ export class Runner {
       } else {
         void this.handlePingTimeout()
       }
-    }, 500)
+    }, 1000)
   }
 
   private async handlePingTimeout (): Promise<void> {

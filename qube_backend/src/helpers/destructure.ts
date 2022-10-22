@@ -20,6 +20,7 @@ export function destructure (payload: RawPacket): QUBEPacket | undefined {
       measurement: {
         ODMR: Array.from(new Uint16Array(payload.buffer.slice(2, 402))
           .map((value) => (value / (2 << 15)) * VREF))
+          .map((value) => value / 1000)
       },
       referenceTemp: {
         referenceTemperature: Number((payload.readUInt16LE(402) / 16).toFixed(2)) + 25
