@@ -14,7 +14,7 @@ onMounted(() => {
         max: packetStore.getMaximumMicrowave,
         data: packetStore.getMicrowaveRange,
         name: 'Microwave Frequency (MHz)',
-        offset: 25,
+        // offset: 25,
         axisLine: {
           lineStyle: {
             color: '#ffff',
@@ -40,8 +40,8 @@ onMounted(() => {
          * the top padding will shift the name down so that it does not overlap with the axis-labels
          * t-l-b-r
          */
-          padding: [50, 0, 0, 0],
-          fontSize: 16
+          padding: [40, 0, 0, 0],
+          fontSize: 30
         }
       },
       yAxis: {
@@ -51,7 +51,7 @@ onMounted(() => {
         minInterval: 1,
         // fontsize of axis title
         nameTextStyle: {
-          fontSize: 16
+          fontSize: 30
         },
         // amount of ticks on the
         minorTick: {
