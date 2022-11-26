@@ -19,21 +19,22 @@ const dots = computed(() => {
 
 <template>
   <div class="h-full m-auto text-center w-[780px]">
-    <video
+    <!--
+      <video
       autoplay
       loop
-    >
-      <source
-        src="https://rotato.netlify.app/alpha-demo/movie-hevc.mov"
-        type="video/mp4; codecs=hvc1"
       >
       <source
-        src="https://rotato.netlify.app/alpha-demo/movie-webm.webm"
-        type="video/webm"
+      src="https://rotato.netlify.app/alpha-demo/movie-hevc.mov"
+      type="video/mp4; codecs=hvc1"
+      >
+      <source
+      src="https://rotato.netlify.app/alpha-demo/movie-webm.webm"
+      type="video/webm"
       >
       Sorry, your browser doesn't support embedded videos.
-    </video>
-
+      </video>
+    -->
     <div class="text-centered">
       <h1 class="text-4xl">
         The QUBE is currently disconnected

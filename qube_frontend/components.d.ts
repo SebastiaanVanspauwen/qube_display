@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AverageIcon: typeof import('./src/components/icons/AverageIcon.vue')['default']
     BottomCopyright: typeof import('./src/components/footer/BottomCopyright.vue')['default']
     BottomFooter: typeof import('./src/components/footer/BottomFooter.vue')['default']
     BottomSocials: typeof import('./src/components/footer/BottomSocials.vue')['default']

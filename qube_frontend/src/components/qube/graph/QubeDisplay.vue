@@ -65,7 +65,7 @@ const connectionStore = useConnectionStore()
             unit=""
             :value="packetStore.getLaserState"
           >
-            <LaserBeamIcon />
+            <MicrowaveIcon />
           </StatisticsCard>
           <StatisticsCard
             header="Laser Power"
@@ -79,13 +79,13 @@ const connectionStore = useConnectionStore()
             unit="%"
             :value="packetStore.getAttenuationStrength"
           >
-            <LaserBeamIcon />
+            <MicrowaveIcon />
           </StatisticsCard>
           <StatisticsCard
             header="Averages taken"
             :value="packetStore.getAverageOptical"
           >
-            <LaserBeamIcon />
+            <AverageIcon />
           </StatisticsCard>
         </div>
       </div>

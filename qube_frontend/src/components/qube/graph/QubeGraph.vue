@@ -118,7 +118,7 @@ window.onresize = (): void => {
   <div class="bg-primary_darkblue flex m-auto my-12 opacity-90 w-[90%]">
     <div
       id="odmr"
-      class="m-auto min-h-[750px] w-[100%]"
+      class="m-auto min-h-[850px] w-[100%]"
     />
   </div>
 </template>
