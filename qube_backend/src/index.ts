@@ -16,6 +16,10 @@ export class Runner {
   private readonly QUBE_PORT_SEND = 7777
   private readonly QUBE_IP = '172.22.222.208'
 
+  private readonly PING_SIZE = 14
+  private readonly PACKET_SIZE = 512
+  private readonly PING_INTERVAL = 1000
+
   private readonly socket: datagram.Socket = datagram.createSocket('udp4')
 
   async start (): Promise<void> {
@@ -27,7 +31,7 @@ export class Runner {
   }
 
   private initHandlers (): void {
-    this.logger.info('Connecting to QUBE')
+    this.logger.info('Attempting to connect to QUBE')
 
     this.socket.bind(this.QUBE_PORT_RECV)
     this.socket.connect(this.QUBE_PORT_SEND, this.QUBE_IP)
@@ -38,12 +42,12 @@ export class Runner {
 
     this.socket.on('message', (raw: Buffer, rInfo: datagram.RemoteInfo) => {
       switch (rInfo.size) {
-      case 14:
-        this.logger.info(`Reply QUBE at ${this.socket.address().address}:${this.socket.address().port}`)
+      case this.PING_SIZE:
+        // this.logger.info(`Reply QUBE at ${this.socket.address().address}:${this.socket.address().port}`)
         this.pingReply = true
         break
 
-      case 512:
+      case this.PACKET_SIZE:
         this.lastPacket = destructure(raw)
 
         if (this.lastPacket !== undefined && this.wss !== undefined) {
@@ -62,15 +66,15 @@ export class Runner {
   }
 
   private async initPing (): Promise<void> {
-    this.pinger = setInterval(() => {
-      this.logger.info(`Pinged QUBE at ${this.QUBE_IP}:${this.QUBE_PORT_SEND}`)
+    this.pinger = setInterval(async () => {
+      // this.logger.info(`Pinged QUBE at ${this.QUBE_IP}:${this.QUBE_PORT_SEND}`)
 
       if (this.pingReply) {
         if (this.wss === undefined &&  this.pingCount > 2) {
           this.wss = new WebSocketServer({ port: 9000 })
 
-          this.wss.on('connection', (ws: WebSocket) => {
-            this.logger.info('Client connected from:', ws.url)
+          this.wss.on('connection', () => {
+            this.logger.info('Frontend connected.')
           })
 
           this.wss.on('message', (message: string) => {
@@ -93,22 +97,33 @@ export class Runner {
         this.pingReply = false
         this.pingCount++
       } else {
-        void this.handlePingTimeout()
+        await this.handlePingTimeout()
       }
-    }, 1000)
+    }, this.PING_INTERVAL)
   }
 
   private async handlePingTimeout (): Promise<void> {
     await this.close()
+    await new Promise(resolve => setTimeout(resolve, 4000))
     await new Runner().start()
   }
 
   private async close (): Promise<void> {
-    this.wss?.close()
     this.socket.close()
     clearTimeout(this.pinger)
+    this.logger.info('Closed connection to QUBE, no reply in time.')
 
-    this.logger.info('Closing connection to QUBE')
+    if (this.wss) {
+      this.wss.close()
+      this.logger.info('Closed connection to clients. (Frontend)')
+      try {
+        this.wss.clients.forEach(client => {
+          client.close(1012)
+        })
+      } catch (err) {
+        this.logger.error('Error: ', err)
+      }
+    }
   }
 }
 

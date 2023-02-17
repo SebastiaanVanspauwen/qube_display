@@ -12,14 +12,22 @@ export const useConnectionStore = defineStore({
   }),
   actions: {
     WSS_ONOPEN () {
+      console.log('FE open')
       this.isConnected = true
     },
     WSS_ONERROR () {
+      console.log('FE connect to wss failed. Retrying...')
+
+      if (this.wss !== undefined) this.wss.close()
+      this.wss = undefined
       this.isConnected = false
+      this.hasWSS = false
     },
     WSS_ONCLOSE () {
+      console.log('FE closed')
       this.isConnected = false
       this.wss = undefined
+      this.hasWSS = false
     },
     WSS_ONMESSAGE (event: MessageEvent) {
       const packet = JSON.parse(event.data)
@@ -34,6 +42,7 @@ export const useConnectionStore = defineStore({
       this.heartBeat = setInterval(() => {
         if (!this.isConnected && this.wss === undefined) {
           try {
+
             this.wss = new WebSocket('ws://172.22.222.220:9000')
             this.wss.onopen = () => this.WSS_ONOPEN()
             this.wss.onerror = () => this.WSS_ONERROR()
