@@ -15,7 +15,7 @@ const options = {
       value: 'white'
     }
   },
-  fpsLimit: 30,
+  fpsLimit: 20,
   interactivity: {
     modes: {
       bubble: {

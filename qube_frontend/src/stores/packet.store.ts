@@ -22,12 +22,13 @@ export const usePacketStore = defineStore({
       return await new Promise(resolve => setTimeout(resolve, ms))
     },
     async calculatePPS () {
+      const divider = 5
       this.ppsTimer = setInterval(async () => {
         const packets = this.packetsReceived
         // Wait for 1 second before calculating packets per second
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        this.pps = this.packetsReceived - packets
-      }, 1000)
+        await new Promise(resolve => setTimeout(resolve, divider * 1000))
+        this.pps = (this.packetsReceived - packets) / divider
+      }, divider * 1000)
     },
     clearPPS () {
       clearInterval(this.ppsTimer)

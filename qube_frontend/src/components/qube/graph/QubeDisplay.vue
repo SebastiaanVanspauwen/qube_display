@@ -44,7 +44,6 @@ const connectionStore = useConnectionStore()
           </StatisticsCard>
           <StatisticsCard
             header="Packets per second"
-            unit="/s"
             :value="packetStore.getPPS.toString()"
           >
             <SpeedIcon />

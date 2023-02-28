@@ -106,12 +106,13 @@ onMounted(() => {
       }
       ]
     })
-  }, 20)
+  }, 150)
 })
-
-window.onresize = (): void => {
-  odmrChart.resize()
-}
+/*
+  window.onresize = (): void => {
+    odmrChart.resize()
+  }
+*/
 </script>
 
 <template>

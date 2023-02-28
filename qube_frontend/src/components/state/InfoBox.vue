@@ -8,7 +8,7 @@ const connectionStore = useConnectionStore()
 
 <template>
     <div class="w-full justify-center m-auto flex">
-        <FPSCounter />
+        <!-- <FPSCounter /> -->
         <div class="m-auto flex my-8">
             <ConnectionStatus 
             :enabled="connectionStore.isConnected"

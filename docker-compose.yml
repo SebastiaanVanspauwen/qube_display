@@ -1,0 +1,14 @@
+version: "3"
+services:
+  backend:
+    image: backend:latest
+    ports:
+      - 9000:9000
+      - 7777:7777/udp
+      - 10016:10016/udp
+    dns:
+      - "8.8.8.8"
+  frontend:
+    image: frontend:latest
+    ports:
+      - 8081:8081

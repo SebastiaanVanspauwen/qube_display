@@ -19,7 +19,6 @@ const dots = computed(() => {
 
 <template>
   <div class="h-full m-auto text-center w-[780px]">
-    <!--
       <video
       autoplay
       loop
@@ -34,7 +33,6 @@ const dots = computed(() => {
       >
       Sorry, your browser doesn't support embedded videos.
       </video>
-    -->
     <div class="text-centered">
       <h1 class="text-4xl">
         The QUBE is currently disconnected
