@@ -108,15 +108,14 @@ onMounted(() => {
     })
   }, 150)
 })
-/*
-  window.onresize = (): void => {
-    odmrChart.resize()
-  }
-*/
+
+window.onresize = (): void => {
+  odmrChart.resize()
+}
 </script>
 
 <template>
-  <div class="bg-primary_darkblue flex m-auto my-12 opacity-90 w-[90%]">
+  <div class="bg-primary_darkblue flex m-auto items-center my-36 opacity-90">
     <div
       id="odmr"
       class="m-auto min-h-[850px] w-[100%]"

@@ -102,7 +102,6 @@ const particlesInit = async (engine: Engine) => {
 html, body {
   background-color: #030B2B;
   height: 100%;
-  min-width: 780px;
   overflow-y: hidden;
 }
 </style>

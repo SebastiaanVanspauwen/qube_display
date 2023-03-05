@@ -39,6 +39,7 @@ export const usePacketStore = defineStore({
       return this.packet
     },
     getPacketCount (): string {
+      if (this.packetsReceived > 1000000) this.packetsReceived = 0
       return this.packetsReceived?.toString() ?? '0'
     },
     getRefTemp (): string {

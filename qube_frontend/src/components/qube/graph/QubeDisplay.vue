@@ -13,7 +13,7 @@ const connectionStore = useConnectionStore()
   >
     <div class="mx-auto w-[100%]">
       <!-- Info cards -->
-      <div class="justify-between m-auto max-w-[860px] w-[80%]">
+      <div class="justify-between m-auto">
         <!-- Info cards top row -->
         <div class="flex m-auto">
           <StatisticsCard
@@ -92,6 +92,11 @@ const connectionStore = useConnectionStore()
       <!-- Graph -->
       <div class="h-[40%] my-auto w-full">
         <QubeGraph />
+      </div>
+      <div class="justify-center my-auto text-center pt-48">
+        <h1 class="font-bold h-[128px] text-6xl text-white w-full">
+          OSCAR-QUBE Display
+        </h1>
       </div>
     </div>
   </div>
